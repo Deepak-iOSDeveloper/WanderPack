@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isPlatformAdmin() {
+      return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin"
+        || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "superadmin"
+      );
+    }
+
+    function isTripAdmin() {
+      return signedIn() && request.auth.uid == resource.data.adminId;
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create: if isOwner(uid);
+      allow update, delete: if isOwner(uid);
+    }
+
+    match /trips/{tripId} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.adminId == request.auth.uid;
+      allow update, delete: if isTripAdmin();
+    }
+
+    match /posts/{postId} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if signedIn() && resource.data.authorId == request.auth.uid;
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if signedIn() && (
+        resource.data.userId == request.auth.uid
+        || isPlatformAdmin()
+      );
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if signedIn() && (
+        resource.data.userId == request.auth.uid
+        || isPlatformAdmin()
+      ) && (
+        request.resource == null
+        || request.resource.data.userId == resource.data.userId
+      );
+    }
+
+    match /wishlist/{wishlistId} {
+      allow read, create, update, delete: if signedIn() && (
+        resource == null
+        || resource.data.userId == request.auth.uid
+      ) && (
+        request.resource == null
+        || request.resource.data.userId == request.auth.uid
+      );
+    }
+
+    match /supportTickets/{ticketId} {
+      allow read: if signedIn() && (
+        resource.data.userId == request.auth.uid
+        || isPlatformAdmin()
+      );
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if signedIn() && (
+        resource.data.userId == request.auth.uid
+        || isPlatformAdmin()
+      ) && (
+        request.resource == null
+        || request.resource.data.userId == resource.data.userId
+      );
+    }
+
+    match /notifications/{notificationId} {
+      allow read, update, delete: if signedIn() && (
+        resource.data.userId == request.auth.uid
+        || isPlatformAdmin()
+      );
+      allow create: if signedIn() && (
+        request.resource.data.userId == request.auth.uid
+        || isPlatformAdmin()
+      );
+    }
+
+    match /activityLog/{logId} {
+      allow read: if signedIn();
+      allow create: if signedIn();
+      allow update, delete: if false;
+    }
+  }
+}

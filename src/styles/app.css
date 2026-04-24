@@ -1,0 +1,1685 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap");
+
+:root {
+  --sun: #ffd93d;
+  --coral: #ff6b6b;
+  --sky: #4ecdc4;
+  --ocean: #1a535c;
+  --lavender: #c3a6ff;
+  --green: #6bcb77;
+  --bg: #fff8f0;
+  --card: #ffffff;
+  --text: #2d2d2d;
+  --muted: #7a7a9d;
+  --border: #e8e8f0;
+  --radius: 24px;
+  --shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.14);
+}
+
+:root[data-theme="dark"] {
+  --bg: #102027;
+  --card: rgba(19, 39, 46, 0.94);
+  --text: #ecf7f6;
+  --muted: #a6c5c8;
+  --border: #274953;
+  --shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.34);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Nunito", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+.blob-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.blob-bg span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.16;
+}
+
+.b1 { width: 500px; height: 500px; background: var(--sun); top: -120px; left: -120px; }
+.b2 { width: 400px; height: 400px; background: var(--coral); top: 180px; right: -80px; }
+.b3 { width: 350px; height: 350px; background: var(--sky); bottom: 60px; left: 30%; }
+.b4 { width: 280px; height: 280px; background: var(--lavender); bottom: 200px; right: 20%; }
+
+.wp-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 24px;
+  min-height: 68px;
+  background: color-mix(in srgb, var(--bg) 84%, white 16%);
+  backdrop-filter: blur(14px);
+  border-bottom: 2px solid rgba(255, 217, 61, 0.34);
+}
+
+.app-shell-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 310px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  min-height: 100vh;
+  padding: 24px 18px;
+  background:
+    linear-gradient(180deg, rgba(7, 38, 65, 0.96) 0%, rgba(14, 63, 100, 0.94) 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-main {
+  min-width: 0;
+}
+
+.workspace-topbar {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  background: color-mix(in srgb, var(--bg) 88%, white 12%);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(26, 83, 92, 0.1);
+}
+
+.global-top-nav {
+  position: relative;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  padding: 0 24px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(26, 83, 92, 0.08);
+}
+
+.global-top-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.global-top-link {
+  padding: 9px 14px;
+  border-radius: 999px;
+  color: var(--ocean);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.global-top-link.active,
+.global-top-link:hover {
+  background: rgba(255, 107, 107, 0.12);
+  color: var(--coral);
+}
+
+.workspace-topbar h2 {
+  margin: 8px 0 0;
+  color: var(--ocean);
+  font-family: "Fredoka One", cursive;
+  font-size: clamp(1.4rem, 2vw, 2rem);
+  line-height: 1.1;
+}
+
+.workspace-topbar-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-logo {
+  color: #ffffff;
+  text-decoration: none;
+  font-family: "Fredoka One", cursive;
+  font-size: 1.7rem;
+}
+
+.sidebar-caption {
+  margin: -8px 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.travel-product-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.travel-product-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.travel-product-pill.active,
+.travel-product-pill:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-group {
+  display: grid;
+  gap: 10px;
+}
+
+.sidebar-link {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.sidebar-link-button {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sidebar-link strong {
+  font-size: 0.98rem;
+}
+
+.sidebar-link span {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.83rem;
+}
+
+.sidebar-link.active,
+.sidebar-link:hover {
+  transform: translateX(2px);
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.22), rgba(255, 217, 61, 0.18));
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-profile-card {
+  margin-top: auto;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.sidebar-profile-card .text-muted {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.nav-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  color: var(--ocean);
+  text-decoration: none;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 999px;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+  background: var(--sun);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-avatar,
+.profile-avatar-large {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--coral);
+  font-weight: 900;
+}
+
+.nav-avatar {
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+}
+
+.profile-avatar-large {
+  width: 92px;
+  height: 92px;
+  font-size: 2.2rem;
+}
+
+.section {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0;
+  padding: 36px 24px 60px;
+}
+
+.section-tight {
+  padding-top: 16px;
+  padding-bottom: 0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-weight: 900;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+
+.btn-sm { padding: 8px 16px; font-size: 0.84rem; }
+.btn-lg { padding: 14px 28px; font-size: 1rem; }
+.btn-primary { background: var(--coral); color: #fff; }
+.btn-outline { background: transparent; color: var(--coral); border: 2px solid var(--coral); }
+.btn-sky { background: var(--sky); color: #fff; }
+.btn-green { background: var(--green); color: #fff; }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 28px;
+  align-items: center;
+  min-height: calc(100vh - 68px);
+}
+
+.hero-copy h1,
+.dashboard-header h1,
+.profile-hero h1,
+.admin-hero h1,
+.trip-hero-card h1,
+.explore-header h1 {
+  margin: 16px 0 12px;
+  color: var(--ocean);
+  font-family: "Fredoka One", cursive;
+  font-size: clamp(2.4rem, 4vw, 4rem);
+  line-height: 1.05;
+}
+
+.hero-copy h1 span,
+.dashboard-header h1 span {
+  color: var(--coral);
+}
+
+.hero-copy p,
+.text-muted {
+  color: var(--muted);
+}
+
+.eyebrow-pill,
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(26, 83, 92, 0.08);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hero-actions,
+.tag-row,
+.chip-row,
+.filter-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hero-panel,
+.stack,
+.feature-grid,
+.stats-grid,
+.trip-grid,
+.trip-form-grid,
+.two-column-grid,
+.trip-layout,
+.feed-layout,
+.detail-list,
+.table-like,
+.simple-grid,
+.chat-thread {
+  display: grid;
+  gap: 16px;
+}
+
+.glass-card,
+.feature-card,
+.panel-card,
+.post-card,
+.sidebar-card,
+.profile-hero,
+.trip-hero-card,
+.admin-hero,
+.stat-card,
+.trip-card,
+.empty-card,
+.story-card,
+.destination-card,
+.mini-note,
+.metric-box,
+.chat-bubble {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.glass-card,
+.feature-card,
+.panel-card,
+.sidebar-card,
+.trip-hero-card,
+.admin-hero,
+.profile-hero,
+.stat-card,
+.empty-card,
+.destination-card,
+.mini-note {
+  padding: 24px;
+}
+
+.feature-card h3,
+.panel-card h2,
+.sidebar-card h3,
+.post-card strong,
+.trip-card h3,
+.section-title {
+  margin: 0 0 8px;
+  color: var(--ocean);
+}
+
+.section-title {
+  font-family: "Fredoka One", cursive;
+  font-size: 1.1rem;
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, 100%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.auth-showcase,
+.auth-card {
+  border-radius: 32px;
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+}
+
+.auth-showcase {
+  color: #fff;
+  background:
+    radial-gradient(circle at top left, rgba(255, 217, 61, 0.3), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(195, 166, 255, 0.28), transparent 34%),
+    linear-gradient(145deg, #15444a 0%, #1a535c 52%, #2f7d7a 100%);
+}
+
+.auth-showcase h1,
+.brand-mark {
+  font-family: "Fredoka One", cursive;
+}
+
+.brand-mark {
+  font-size: 1.7rem;
+  margin-bottom: 18px;
+}
+
+.feature-stack,
+.auth-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.feature-tile {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.95);
+  display: grid;
+  gap: 18px;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: #f3f6f9;
+  padding: 6px;
+  border-radius: 18px;
+}
+
+.auth-tab,
+.chip {
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: #fff;
+  color: var(--ocean);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.auth-tab.active,
+.chip.active {
+  background: var(--coral);
+  color: #fff;
+}
+
+.input-row,
+.trip-form-grid,
+.two-column-grid,
+.trip-layout,
+.feed-layout,
+.stats-grid,
+.dashboard-grid,
+.split-panel {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.trip-form-grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 22px;
+}
+
+.stat-card strong,
+.metric-box strong {
+  display: block;
+  font-size: 2rem;
+  color: var(--ocean);
+  font-family: "Fredoka One", cursive;
+}
+
+.stat-card span,
+.metric-box span {
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.metric-box {
+  padding: 16px 18px;
+}
+
+.trip-builder-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 217, 61, 0.2), rgba(78, 205, 196, 0.18));
+}
+
+.trip-sticker-badge {
+  display: grid;
+  place-items: center;
+  min-width: 72px;
+  min-height: 72px;
+  padding: 10px;
+  border-radius: 22px;
+  background: #fff;
+  color: var(--ocean);
+  font-family: "Fredoka One", cursive;
+  font-size: 1.1rem;
+  box-shadow: var(--shadow);
+}
+
+.sticker-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.sticker-chip {
+  display: grid;
+  gap: 6px;
+  padding: 14px 12px;
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sticker-chip strong {
+  color: var(--ocean);
+}
+
+.sticker-chip span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.sticker-chip.active {
+  border-color: rgba(255, 107, 107, 0.45);
+  background: rgba(255, 107, 107, 0.08);
+}
+
+.notice {
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 800;
+}
+
+.notice.error {
+  background: #fff0f1;
+  border: 1px solid #ffc9cf;
+  color: #b42318;
+}
+
+.notice.success {
+  background: #eefbf4;
+  border: 1px solid #b7ebca;
+  color: #116b42;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.field-top,
+.panel-row,
+.inline-form,
+.post-author,
+.notification-strip,
+.stories-row,
+.destination-grid,
+.action-stack {
+  display: flex;
+  gap: 12px;
+}
+
+.field-top,
+.panel-row,
+.inline-form {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-author {
+  align-items: center;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  outline: none;
+  background: #fff;
+}
+
+.form-control:focus {
+  border-color: var(--coral);
+}
+
+.support-link {
+  background: transparent;
+  color: var(--coral);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.role-selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.role-card {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.role-card.selected {
+  border-color: var(--coral);
+}
+
+.auth-primary {
+  width: 100%;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: var(--border);
+}
+
+.google-btn {
+  padding: 12px 18px;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.dashboard-header,
+.explore-header {
+  margin-bottom: 24px;
+}
+
+.workspace-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.hero-summary-card {
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at top right, rgba(255, 217, 61, 0.35), transparent 30%),
+    linear-gradient(160deg, #113e58 0%, #1d6a84 100%);
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-summary-item {
+  display: grid;
+  gap: 4px;
+}
+
+.hero-summary-item strong {
+  font-family: "Fredoka One", cursive;
+  font-size: 2rem;
+}
+
+.hero-summary-item span {
+  color: rgba(255, 255, 255, 0.76);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 18px;
+}
+
+.india-art-card,
+.india-mini-poster {
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px;
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+}
+
+.india-art-card {
+  min-height: 280px;
+  padding: 26px;
+  display: grid;
+  align-content: space-between;
+}
+
+.india-art-card::before,
+.india-art-card::after,
+.india-mini-poster::before {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  opacity: 0.3;
+}
+
+.india-art-card::before {
+  width: 180px;
+  height: 180px;
+  top: -30px;
+  right: -40px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.india-art-card::after {
+  width: 120px;
+  height: 120px;
+  bottom: -20px;
+  left: -30px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.india-art-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.india-art-icon {
+  position: relative;
+  z-index: 1;
+  font-size: 5rem;
+  line-height: 1;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.12));
+}
+
+.india-art-card strong,
+.india-art-card span {
+  position: relative;
+  z-index: 1;
+}
+
+.india-art-card strong {
+  font-size: 1.6rem;
+  font-family: "Fredoka One", cursive;
+}
+
+.india-art-card span {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.india-art-flights,
+.india-card-header-flights,
+.india-mini-poster-flights {
+  background: linear-gradient(145deg, #1c85d8 0%, #57b0ff 50%, #8dd7ff 100%);
+}
+
+.india-art-hotels,
+.india-card-header-hotels,
+.india-mini-poster-hotels {
+  background: linear-gradient(145deg, #f46b45 0%, #eea849 100%);
+}
+
+.india-art-homestays,
+.india-card-header-homestays,
+.india-mini-poster-homestays {
+  background: linear-gradient(145deg, #3c9d6f 0%, #76c98b 100%);
+}
+
+.india-art-packages,
+.india-card-header-packages,
+.india-mini-poster-packages {
+  background: linear-gradient(145deg, #7a5cff 0%, #f38ac8 100%);
+}
+
+.india-art-trains,
+.india-card-header-trains,
+.india-mini-poster-trains {
+  background: linear-gradient(145deg, #5962ff 0%, #7ec8ff 100%);
+}
+
+.india-art-buses,
+.india-card-header-buses,
+.india-mini-poster-buses {
+  background: linear-gradient(145deg, #ff7b54 0%, #ffb26b 100%);
+}
+
+.india-art-cabs,
+.india-card-header-cabs,
+.india-mini-poster-cabs {
+  background: linear-gradient(145deg, #111827 0%, #f59e0b 100%);
+}
+
+.india-offer-card {
+  cursor: default;
+}
+
+.india-card-header {
+  color: #fff;
+}
+
+.india-destination-card {
+  display: grid;
+  gap: 8px;
+}
+
+.india-mini-poster {
+  padding: 24px;
+}
+
+.india-mini-poster span,
+.india-mini-poster strong,
+.india-mini-poster p {
+  position: relative;
+  z-index: 1;
+}
+
+.india-mini-poster span {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.india-mini-poster strong {
+  display: block;
+  margin: 16px 0 10px;
+  font-size: 1.35rem;
+  font-family: "Fredoka One", cursive;
+}
+
+.india-mini-poster p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.india-package-layout,
+.booking-vault-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.india-package-layout {
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+}
+
+.india-package-hero-card,
+.package-card,
+.booking-vault-card {
+  overflow: hidden;
+}
+
+.india-package-hero-card {
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.india-package-hero-image,
+.package-card-image,
+.booking-vault-image {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.image-fallback {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  padding: 24px;
+  text-align: center;
+  color: #fff;
+  background:
+    radial-gradient(circle at top left, rgba(255, 217, 61, 0.35), transparent 34%),
+    linear-gradient(145deg, #1d6a84 0%, #2d8f8b 55%, #ff8f6b 100%);
+}
+
+.image-fallback strong {
+  font-family: "Fredoka One", cursive;
+  font-size: 1.4rem;
+}
+
+.image-fallback span {
+  font-size: 0.9rem;
+  opacity: 0.92;
+}
+
+.india-package-hero-image {
+  height: 240px;
+}
+
+.hotel-hero {
+  align-items: stretch;
+}
+
+.hotel-hero-media {
+  overflow: hidden;
+  padding: 0;
+}
+
+.hotel-hero-image,
+.hotel-deal-image {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.hotel-hero-image {
+  height: 260px;
+}
+
+.hotel-hero-copy {
+  display: grid;
+  gap: 10px;
+  padding: 20px 22px 22px;
+}
+
+.hotel-hero-copy span,
+.hotel-live-note span {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal-dark);
+}
+
+.hotel-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hotel-photo-thumb {
+  display: block;
+  overflow: hidden;
+  border-radius: 16px;
+  min-height: 92px;
+  background: #f7f9fc;
+}
+
+.hotel-photo-thumb img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.24s ease;
+}
+
+.hotel-photo-thumb:hover img {
+  transform: scale(1.05);
+}
+
+.hotel-deal-card {
+  overflow: hidden;
+}
+
+.hotel-deal-image {
+  height: 180px;
+}
+
+.hotel-live-note {
+  display: grid;
+  gap: 10px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 217, 61, 0.26), transparent 28%),
+    linear-gradient(145deg, rgba(29, 106, 132, 0.08), rgba(255, 143, 107, 0.08));
+}
+
+.admin-booking-row {
+  width: 100%;
+  border: 1px solid transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.admin-booking-row-active {
+  border-color: rgba(255, 107, 107, 0.3);
+  box-shadow: 0 14px 30px rgba(255, 107, 107, 0.08);
+}
+
+@media (max-width: 900px) {
+  .hotel-photo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.india-package-hero-copy {
+  display: grid;
+  gap: 8px;
+  padding: 18px 20px 22px;
+}
+
+.india-package-hero-copy span {
+  color: var(--coral);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.india-package-hero-copy strong {
+  font-size: 1.4rem;
+  color: var(--ocean);
+}
+
+.india-package-hero-copy p,
+.package-card-body p,
+.package-price-row span,
+.booking-vault-image-wrap {
+  margin: 0;
+}
+
+.package-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.package-card {
+  border: 2px solid transparent;
+}
+
+.package-card-active {
+  border-color: rgba(255, 107, 107, 0.35);
+  box-shadow: 0 18px 40px rgba(255, 107, 107, 0.12);
+}
+
+.package-card-image {
+  height: 220px;
+}
+
+.package-card-body {
+  display: grid;
+  gap: 14px;
+  padding: 18px 20px 22px;
+}
+
+.package-card-actions {
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.package-card-actions > .btn,
+.package-card-actions > .chip,
+.package-card-actions > a {
+  flex: 0 0 auto;
+}
+
+.offers-card {
+  overflow: hidden;
+}
+
+.offers-media {
+  position: relative;
+}
+
+.offers-image {
+  display: block;
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+}
+
+.offers-overlay {
+  position: absolute;
+  inset: auto 16px 16px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.offers-overlay em {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(12, 23, 34, 0.68);
+  color: #fff;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.package-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.package-price-row strong,
+.package-payment-box strong {
+  color: var(--ocean);
+  font-size: 1.3rem;
+}
+
+.package-payment-box {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 217, 61, 0.22), rgba(69, 183, 169, 0.2));
+}
+
+.package-payment-box small {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.compare-card,
+.passenger-grid,
+.booking-receipt-hero {
+  border-radius: 18px;
+  background: #f7f9fc;
+}
+
+.compare-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.passenger-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 120px 140px;
+  gap: 12px;
+  padding: 12px;
+}
+
+.booking-receipt-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.fake-qr {
+  width: 92px;
+  height: 92px;
+  border: 8px solid #121212;
+  border-radius: 10px;
+  background:
+    linear-gradient(90deg, #121212 10px, transparent 10px) 0 0 / 24px 24px,
+    linear-gradient(#121212 10px, transparent 10px) 0 0 / 24px 24px,
+    linear-gradient(90deg, transparent 12px, #121212 12px, #121212 16px, transparent 16px) 0 0 / 24px 24px,
+    linear-gradient(transparent 12px, #121212 12px, #121212 16px, transparent 16px) 0 0 / 24px 24px,
+    #fff;
+  flex-shrink: 0;
+}
+
+.receipt-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.receipt-copy strong {
+  color: var(--ocean);
+}
+
+.receipt-copy span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.booking-vault-grid {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.booking-vault-image-wrap {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.booking-vault-image {
+  height: 220px;
+}
+
+.booking-vault-meta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.trip-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.trip-card {
+  text-align: left;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.trip-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #ffd93d, #ff6b6b);
+}
+
+.trip-card-body {
+  padding: 18px 20px 22px;
+}
+
+.notification-strip,
+.stories-row {
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.destination-grid {
+  flex-wrap: wrap;
+}
+
+.destination-card {
+  flex: 1 1 260px;
+}
+
+.story-card,
+.mini-note {
+  min-width: 180px;
+}
+
+.story-card {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  padding: 16px;
+}
+
+.mini-note {
+  display: grid;
+  gap: 4px;
+}
+
+.mini-note-unread {
+  outline: 2px solid var(--coral);
+}
+
+.post-card {
+  overflow: hidden;
+}
+
+.post-header,
+.post-body,
+.post-actions,
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.post-header,
+.post-body {
+  padding: 18px;
+  align-items: flex-start;
+}
+
+.post-body-stack {
+  display: grid;
+  gap: 14px;
+}
+
+.post-banner {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #ffd93d, #ff6b6b);
+  font-size: 4rem;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.post-banner-alt {
+  background: linear-gradient(135deg, #1c6f8d, #45b7a9);
+}
+
+.post-banner-with-image {
+  color: #fff;
+}
+
+.post-banner-with-image span {
+  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.post-banner em {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-style: normal;
+}
+
+.tag {
+  padding: 6px 12px;
+  background: #f4f7fb;
+  border-radius: 999px;
+  color: var(--ocean);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.profile-hero,
+.trip-hero-card,
+.admin-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.hero-split {
+  align-items: flex-start;
+}
+
+.action-stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.trip-layout {
+  grid-template-columns: 280px 1fr;
+}
+
+.activity-card,
+.detail-row,
+.chat-bubble {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card) 84%, white 16%);
+}
+
+.panel-subsection {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.trip-form-wide {
+  grid-column: 1 / -2;
+}
+
+.notification-chip {
+  white-space: nowrap;
+}
+
+.detail-list > div {
+  display: grid;
+  gap: 4px;
+}
+
+.dashboard-summary,
+.subtle-list {
+  display: grid;
+  gap: 12px;
+}
+
+.subtle-item {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f7f9fc;
+}
+
+.mini-feed-image {
+  width: 100%;
+  min-height: 148px;
+  margin-bottom: 14px;
+  border-radius: 18px;
+  background-size: cover;
+  background-position: center;
+}
+
+.mini-feed-image-fallback {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #ffd93d, #ff6b6b);
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.empty-state {
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.chat-bubble.user {
+  background: rgba(78, 205, 196, 0.18);
+}
+
+.chat-bubble.assistant {
+  background: rgba(255, 107, 107, 0.12);
+}
+
+.chat-bubble strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.chat-bubble p {
+  margin: 0;
+}
+
+.wp-toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 400;
+  max-width: 340px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: var(--ocean);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: 0.25s ease;
+}
+
+.wp-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-loader {
+  display: grid;
+  place-items: center;
+  min-height: 40vh;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--ocean);
+}
+
+@media (max-width: 960px) {
+  .app-shell-layout,
+  .workspace-hero,
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    position: relative;
+    min-height: auto;
+  }
+
+  .app-main {
+    padding-top: 58px;
+  }
+
+  .global-top-nav {
+    left: 0;
+  }
+
+  .workspace-topbar {
+    position: relative;
+  }
+
+  .hero,
+  .auth-shell,
+  .feed-layout,
+  .india-package-layout,
+  .trip-layout,
+  .two-column-grid,
+  .dashboard-grid,
+  .split-panel,
+  .simple-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trip-form-wide {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-sidebar,
+  .global-top-nav,
+  .workspace-topbar {
+    padding: 18px 16px;
+  }
+
+  .booking-vault-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .section {
+    padding: 24px 16px 48px;
+  }
+
+  .auth-page {
+    padding: 16px;
+  }
+
+  .role-selector,
+  .input-row {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-hero,
+  .trip-hero-card,
+  .admin-hero,
+  .post-header,
+  .post-body,
+  .booking-receipt-hero,
+  .detail-row,
+  .panel-row,
+  .inline-form {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .passenger-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-right {
+    gap: 6px;
+  }
+}
