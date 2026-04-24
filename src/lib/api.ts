@@ -1,4 +1,4 @@
-import { demoActivityLog, demoNotifications, demoPosts, demoTrips, demoUsers } from "./demoData";
+import { demoActivityLog, demoBookings, demoNotifications, demoPosts, demoTrips, demoUsers } from "./demoData";
 import type {
   ActivityLogItem,
   BookingItem,
@@ -52,7 +52,7 @@ function defaultStore(): LocalStore {
     posts: demoPosts.map((item) => ({ ...item, _id: item._id || item.id })),
     notifications: demoNotifications.map((item) => ({ ...item, _id: item._id || item.id })),
     activityLog: demoActivityLog.map((item) => ({ ...item, _id: item._id || item.id })),
-    bookings: [],
+    bookings: demoBookings.map((item) => ({ ...item, _id: item._id || item.id })),
     wishlist: [],
     supportTickets: [],
   };
@@ -63,10 +63,15 @@ function readLocalStore(): LocalStore {
     const raw = window.localStorage.getItem(LOCAL_STORE_KEY);
     if (!raw) return defaultStore();
     const parsed = JSON.parse(raw) as Partial<LocalStore>;
-    return {
+    const merged = {
       ...defaultStore(),
       ...parsed,
     };
+    // Force demo bookings if the cached state has none, so the user can see them without clearing storage
+    if (merged.bookings.length === 0) {
+      merged.bookings = defaultStore().bookings;
+    }
+    return merged;
   } catch {
     return defaultStore();
   }

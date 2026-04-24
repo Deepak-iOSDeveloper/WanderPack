@@ -55,6 +55,8 @@ export function TripPage() {
   const [notesDraft, setNotesDraft] = useState("");
   const [commentDraft, setCommentDraft] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
+  const [isAddingDay, setIsAddingDay] = useState(false);
+  const [newDayLabel, setNewDayLabel] = useState("");
   const [activityForm, setActivityForm] = useState({
     name: "",
     type: "experience" as ActivityType,
@@ -87,10 +89,14 @@ export function TripPage() {
   useEffect(() => {
     if (!trip) return;
     setNotesDraft(trip.notes || "");
+  }, [trip?.id]);
+
+  useEffect(() => {
+    if (!trip) return;
     if (!activeDayId && trip.itinerary?.[0]?.id) {
       setActiveDayId(trip.itinerary[0].id);
     }
-  }, [activeDayId, trip]);
+  }, [activeDayId, trip?.itinerary]);
 
   const isAdmin = useMemo(() => !!trip && trip.adminId === user?.uid, [trip, user]);
   const currentDay = trip?.itinerary?.find((day) => day.id === activeDayId) || trip?.itinerary?.[0];
@@ -137,9 +143,16 @@ export function TripPage() {
   }
 
   async function handleAddDay() {
-    const label = window.prompt("Day label", "New Day");
-    if (!label) return;
-    await addDay(activeTrip.id, label);
+    if (!newDayLabel.trim()) {
+      showToast("Day label is required.");
+      return;
+    }
+    const newDayId = await addDay(activeTrip.id, newDayLabel.trim());
+    if (newDayId) {
+      setActiveDayId(newDayId);
+    }
+    setNewDayLabel("");
+    setIsAddingDay(false);
     showToast("Day added.");
   }
 
@@ -244,7 +257,23 @@ export function TripPage() {
     <AppShell showAdminLink={profile?.role === "admin" || profile?.role === "superadmin"}>
       <section className="trip-hero-card hero-split">
         <div>
-          <span className="eyebrow-pill">Trip</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
+            <span className="eyebrow-pill">Trip Planner</span>
+            {memberTrips.length > 0 && (
+              <select
+                className="form-control"
+                style={{ width: "auto", display: "inline-block", height: "36px", padding: "0 12px", minWidth: "200px" }}
+                value={trip.id}
+                onChange={(e) => navigate(`/trip?id=${e.target.value}`)}
+              >
+                {memberTrips.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
           <h1>{trip.name}</h1>
           <p>
             {trip.destination} | {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
@@ -305,6 +334,11 @@ export function TripPage() {
                 <input className="form-control" value={trip.startDate || ""} onChange={(event) => void updateTrip(trip.id, { startDate: event.target.value })} placeholder="Start date" />
                 <input className="form-control" value={trip.endDate || ""} onChange={(event) => void updateTrip(trip.id, { endDate: event.target.value })} placeholder="End date" />
                 <input className="form-control" value={String(trip.groupSize || 0)} onChange={(event) => void updateTrip(trip.id, { groupSize: Number(event.target.value) || 0 })} placeholder="Group size" />
+              </div>
+              <div style={{ marginTop: '16px' }}>
+                <button className="btn btn-primary" onClick={() => showToast("Trip details saved successfully!")} type="button">
+                  Save Details
+                </button>
               </div>
             </div>
 
@@ -383,12 +417,20 @@ export function TripPage() {
       {activeTab === "itinerary" ? (
         <div className="trip-layout">
           <aside className="panel-card">
-            <div className="panel-row">
+            <div className="panel-row" style={{ flexWrap: 'wrap', gap: '12px' }}>
               <h2 className="section-title">Trip Days</h2>
               {isAdmin ? (
-                <button className="btn btn-sky btn-sm" onClick={() => void handleAddDay()} type="button">
-                  Add Day
-                </button>
+                isAddingDay ? (
+                  <div className="inline-form" style={{ width: '100%' }}>
+                    <input className="form-control" style={{ height: '36px', padding: '0 8px' }} value={newDayLabel} onChange={(e) => setNewDayLabel(e.target.value)} placeholder="Day label" autoFocus onKeyDown={(e) => { if (e.key === 'Enter') void handleAddDay(); else if (e.key === 'Escape') setIsAddingDay(false); }} />
+                    <button className="btn btn-primary btn-sm" onClick={() => void handleAddDay()} type="button">Save</button>
+                    <button className="btn btn-outline btn-sm" onClick={() => setIsAddingDay(false)} type="button">Cancel</button>
+                  </div>
+                ) : (
+                  <button className="btn btn-sky btn-sm" onClick={() => setIsAddingDay(true)} type="button">
+                    Add Day
+                  </button>
+                )
               ) : null}
             </div>
             <div className="stack">

@@ -57,7 +57,7 @@ function makeAssistantReply(message: string, destination: string) {
   if (text.includes("weather")) {
     return `Use the live weather card below to check current conditions, then adjust clothes and transport choices before locking the itinerary.`;
   }
-  return `For ${destination || "your next destination"}, I’d suggest locking the stay, airport transfer, and first-day plan before polishing activities.`;
+  return `For ${destination || "your next destination"}, I'd suggest locking the stay, airport transfer, and first-day plan before polishing activities.`;
 }
 
 export function AssistantPage() {
@@ -65,8 +65,8 @@ export function AssistantPage() {
   const { profile } = useAuth();
   const { state, memberTrips, updateTrip } = useAppData();
   const { showToast } = useToast();
-  const [selectedTripId, setSelectedTripId] = useState(memberTrips[0]?.id || "");
-  const [destinationQuery, setDestinationQuery] = useState(memberTrips[0]?.destination || "Bali");
+  const [selectedTripId, setSelectedTripId] = useState<string>(() => memberTrips[0]?.id || "");
+  const [destinationQuery, setDestinationQuery] = useState(() => memberTrips[0]?.destination || "Bali");
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherInfo, setWeatherInfo] = useState<{
     destinationLabel: string;
@@ -79,7 +79,7 @@ export function AssistantPage() {
     {
       id: "assistant-1",
       role: "assistant",
-      text: "Ask me about trip planning, budget pacing, packing, or itinerary ideas. I’ll keep it simple and practical.",
+      text: "Ask me about trip planning, budget pacing, packing, or itinerary ideas. I'll keep it simple and practical.",
     },
   ]);
 
@@ -98,26 +98,48 @@ export function AssistantPage() {
     [selectedTrip, weatherInfo?.weatherCode],
   );
 
+  // FIXED: Updated useEffect to properly sync when selectedTrip changes
   useEffect(() => {
     if (!selectedTrip) return;
-    setSelectedTripId(selectedTrip.id);
+    // Only update if the selectedTripId matches the current selectedTrip
+    if (selectedTrip.id !== selectedTripId) {
+      setSelectedTripId(selectedTrip.id);
+    }
     setDestinationQuery(selectedTrip.destination);
-  }, [selectedTrip?.destination, selectedTrip?.id]);
+  }, [selectedTrip, selectedTripId]); // Added selectedTripId to dependencies
+
+  // FIXED: Handle case when memberTrips changes (e.g., after joining a new trip)
+  useEffect(() => {
+    if (memberTrips.length > 0 && !selectedTripId) {
+      setSelectedTripId(memberTrips[0].id);
+      setDestinationQuery(memberTrips[0].destination);
+    }
+  }, [memberTrips, selectedTripId]);
 
   async function handleFetchWeather(destination: string) {
     setWeatherLoading(true);
-    const result = await fetchDestinationWeather(destination);
-    setWeatherInfo(result);
-    setWeatherLoading(false);
-    if (!result) {
-      showToast("Weather could not be loaded for that destination.");
+    try {
+      const result = await fetchDestinationWeather(destination);
+      setWeatherInfo(result);
+      if (!result) {
+        showToast("Weather could not be loaded for that destination.");
+      }
+    } catch (error) {
+      showToast("Failed to fetch weather data.");
+      setWeatherInfo(null);
+    } finally {
+      setWeatherLoading(false);
     }
   }
 
   async function handleApplyPackingList() {
     if (!selectedTrip || !generatedPackingList.length) return;
-    await updateTrip(selectedTrip.id, { packingList: generatedPackingList });
-    showToast("Packing list saved to trip.");
+    try {
+      await updateTrip(selectedTrip.id, { packingList: generatedPackingList });
+      showToast("Packing list saved to trip.");
+    } catch (error) {
+      showToast("Failed to save packing list.");
+    }
   }
 
   function handleSendChat() {
@@ -132,6 +154,16 @@ export function AssistantPage() {
     setChatInput("");
   }
 
+  // FIXED: Added better debugging for dropdown
+  const handleTripChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newTripId = event.target.value;
+    setSelectedTripId(newTripId);
+    const newTrip = memberTrips.find(trip => trip.id === newTripId);
+    if (newTrip) {
+      setDestinationQuery(newTrip.destination);
+    }
+  };
+
   return (
     <AppShell showAdminLink={profile?.role === "admin" || profile?.role === "superadmin"}>
       <section className="dashboard-header dashboard-grid">
@@ -144,25 +176,46 @@ export function AssistantPage() {
         </div>
         <div className="panel-card dashboard-summary">
           <h2 className="section-title">Trip Focus</h2>
-          <select className="form-control" value={selectedTripId} onChange={(event) => setSelectedTripId(event.target.value)}>
-            {memberTrips.map((trip) => (
-              <option value={trip.id} key={trip.id}>
-                {trip.name}
-              </option>
-            ))}
-          </select>
-          {selectedTrip ? (
-            <div className="simple-grid">
-              <div className="metric-box">
-                <strong>{selectedTrip.members.length}</strong>
-                <span>members</span>
-              </div>
-              <div className="metric-box">
-                <strong>{selectedTrip.progress || 0}%</strong>
-                <span>trip ready</span>
-              </div>
+          {/* FIXED: Simplified dropdown with proper event handling */}
+          {memberTrips.length > 0 ? (
+            <>
+              <select
+                className="form-control"
+                value={selectedTripId}
+                onChange={handleTripChange}
+                aria-label="Select a trip"
+              >
+                {memberTrips.map((trip) => (
+                  <option value={trip.id} key={trip.id}>
+                    {trip.name} {trip.destination ? `- ${trip.destination}` : ''}
+                  </option>
+                ))}
+              </select>
+              {selectedTrip ? (
+                <div className="simple-grid">
+                  <div className="metric-box">
+                    <strong>{selectedTrip.members.length}</strong>
+                    <span>members</span>
+                  </div>
+                  <div className="metric-box">
+                    <strong>{selectedTrip.progress || 0}%</strong>
+                    <span>trip ready</span>
+                  </div>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <div className="empty-state">
+              No trips found. Create or join a trip first.
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => navigate('/dashboard')}
+                style={{ marginTop: '10px' }}
+              >
+                Go to Dashboard
+              </button>
             </div>
-          ) : null}
+          )}
         </div>
       </section>
 
@@ -183,6 +236,11 @@ export function AssistantPage() {
               placeholder="Type a question like packing, budget, or itinerary help"
               value={chatInput}
               onChange={(event) => setChatInput(event.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSendChat();
+                }
+              }}
             />
             <button className="btn btn-primary btn-sm" onClick={handleSendChat} type="button">
               Ask FAQ
@@ -194,8 +252,18 @@ export function AssistantPage() {
           <section className="panel-card">
             <h2 className="section-title">Live Weather</h2>
             <div className="inline-form">
-              <input className="form-control" value={destinationQuery} onChange={(event) => setDestinationQuery(event.target.value)} placeholder="Destination" />
-              <button className="btn btn-outline btn-sm" onClick={() => void handleFetchWeather(destinationQuery)} type="button">
+              <input
+                className="form-control"
+                value={destinationQuery}
+                onChange={(event) => setDestinationQuery(event.target.value)}
+                placeholder="Destination"
+              />
+              <button
+                className="btn btn-outline btn-sm"
+                onClick={() => void handleFetchWeather(destinationQuery)}
+                type="button"
+                disabled={weatherLoading || !destinationQuery}
+              >
                 {weatherLoading ? "Loading..." : "Refresh"}
               </button>
             </div>
@@ -218,14 +286,23 @@ export function AssistantPage() {
           <section className="panel-card">
             <h2 className="section-title">Packing List Generator</h2>
             <div className="tag-row">
-              {generatedPackingList.map((item) => (
-                <span className="tag" key={item}>
-                  {item}
-                </span>
-              ))}
+              {generatedPackingList.length > 0 ? (
+                generatedPackingList.map((item) => (
+                  <span className="tag" key={item}>
+                    {item}
+                  </span>
+                ))
+              ) : (
+                <span className="text-muted">Select a destination and load weather to generate packing list</span>
+              )}
             </div>
             <div className="tag-row">
-              <button className="btn btn-primary btn-sm" onClick={() => void handleApplyPackingList()} type="button" disabled={!selectedTrip}>
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => void handleApplyPackingList()}
+                type="button"
+                disabled={!selectedTrip || generatedPackingList.length === 0}
+              >
                 Save To Trip
               </button>
               {selectedTrip ? (

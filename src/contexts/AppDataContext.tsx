@@ -144,7 +144,7 @@ interface AppDataContextValue {
   updateTrip: (tripId: string, updates: Partial<Trip>) => Promise<void>;
   deleteTrip: (tripId: string) => Promise<void>;
   duplicateTrip: (tripId: string) => Promise<Trip | null>;
-  addDay: (tripId: string, label: string, date?: string) => Promise<void>;
+  addDay: (tripId: string, label: string, date?: string) => Promise<string | null>;
   addActivity: (tripId: string, dayId: string, activity: Omit<ActivityItem, "id" | "votes">) => Promise<void>;
   moveActivity: (tripId: string, dayId: string, activityId: string, direction: "up" | "down") => Promise<void>;
   removeActivity: (tripId: string, dayId: string, activityId: string) => Promise<void>;
@@ -468,7 +468,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     await createNotification({
       userId: user.uid,
       title: "Trip created",
-      body: `${trip.name} is ready for planning.`,
+      body: `${trip.name} has been added to your trips.`,
       type: "trip",
       read: false,
     });
@@ -505,9 +505,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
   async function addDay(tripId: string, label: string, date?: string) {
     const trip = state.trips.find((entry) => entry.id === tripId);
-    if (!trip) return;
-    const itinerary = [...(trip.itinerary || []), { id: createId("day"), label, date, activities: [] }];
+    if (!trip) return null;
+    const newDayId = createId("day");
+    const itinerary = [...(trip.itinerary || []), { id: newDayId, label, date, activities: [] }];
     await updateTrip(tripId, { itinerary, progress: Math.min(100, (trip.progress || 0) + 8) });
+    return newDayId;
   }
 
   async function addActivity(tripId: string, dayId: string, activity: Omit<ActivityItem, "id" | "votes">) {

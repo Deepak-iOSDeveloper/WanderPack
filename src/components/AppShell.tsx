@@ -23,9 +23,7 @@ export function AppShell({ children, showAdminLink = false, mode = "traveler" }:
   const unreadNotifications = state.notifications.filter(
     (entry) => entry.userId === profile?.uid && !entry.read,
   );
-  const latestNotifications = state.notifications
-    .filter((entry) => entry.userId === profile?.uid)
-    .slice(0, 4);
+  const latestNotifications = unreadNotifications.slice(0, 3);
   const plannerTripId = memberTrips[0]?.id || state.trips.find((entry) => entry.adminId === profile?.uid)?.id || state.trips[0]?.id;
   const menuItems = isAdminMode
     ? [{ to: "/admin", label: "Control Room", meta: "Live users, trips, posts, bookings, and broadcasts" }]

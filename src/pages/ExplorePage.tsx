@@ -123,7 +123,7 @@ export function ExplorePage() {
         </div>
       </section>
 
-      <section className="filter-row">
+      <section className="filter-row" style={{ margin: "24px 0" }}>
         <input className="form-control" placeholder="Search destinations, tags, or captions" value={search} onChange={(event) => setSearch(event.target.value)} />
         <select className="form-control" value={budgetFilter} onChange={(event) => setBudgetFilter(event.target.value)}>
           <option value="">All budgets</option>
@@ -133,7 +133,7 @@ export function ExplorePage() {
         </select>
       </section>
 
-      <section className="chip-row">
+      <section className="chip-row" style={{ marginBottom: "24px" }}>
         {filters.map((filter) => (
           <button
             className={`chip ${activeFilter === filter ? "active" : ""}`}
