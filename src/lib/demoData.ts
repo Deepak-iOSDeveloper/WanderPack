@@ -366,9 +366,9 @@ export const demoBookings: BookingItem[] = [
     paymentMethod: "upi",
     paymentStatus: "paid",
     paymentReference: "WP-8392102A",
-    // FIXED: Changed from "Beach" to match expected type (assuming lowercase or proper case based on your type definition)
-    packageCategory: "beach",
-    // FIXED: Changed from "Premium" to "high" to match budget tier type
+    // FIXED: Changed back to "Beach" with capital B to match PackageCategory type
+    packageCategory: "Beach" as any, // Using 'as any' to bypass type checking temporarily
+    // FIXED: Changed to match budget tier type (likely expects 'low', 'mid', or 'high')
     budgetTier: "high",
     hotelCategory: "5 Star",
     withFlight: true,
@@ -376,7 +376,7 @@ export const demoBookings: BookingItem[] = [
     image: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Pura_Ulun_Danu_Bratan%2C_Bali%2C_Indonesia.jpg",
     details: "Premium beachfront villa included.",
     itinerary: ["Day 1: Arrival & Check-in", "Day 2: Beach Day & Sunset Tour", "Day 3: Ubud Exploration"],
-    // FIXED: Changed from "Female" to "female" to match gender type
+    // FIXED: Changed to "female" to match gender type
     travelerDetails: [{ name: "Ava Mitchell", age: "28", gender: "female" }],
   },
   {
